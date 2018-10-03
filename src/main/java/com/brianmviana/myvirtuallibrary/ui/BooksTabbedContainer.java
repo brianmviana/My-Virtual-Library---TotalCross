@@ -2,78 +2,101 @@ package com.brianmviana.myvirtuallibrary.ui;
 
 import java.util.ArrayList;
 
+import com.brianmviana.myvirtuallibrary.ui.books.BooksListAbandoned;
+import com.brianmviana.myvirtuallibrary.ui.books.BooksListAll;
+import com.brianmviana.myvirtuallibrary.ui.books.BooksListNotRead;
+import com.brianmviana.myvirtuallibrary.ui.books.BooksListRead;
+import com.brianmviana.myvirtuallibrary.ui.books.BooksListReading;
+import com.brianmviana.myvirtuallibrary.util.Colors;
+
 import totalcross.ui.Button;
 import totalcross.ui.Container;
-import totalcross.ui.ScrollContainer;
 import totalcross.ui.TabbedContainer;
-import totalcross.ui.gfx.Color;
+import totalcross.ui.font.Font;
 
-public class BooksTabbedContainer extends TabbedContainer {
+public class BooksTabbedContainer extends TabbedContainer{
 
-	private static final String [] names = {"1","2","3","4","5",};
-	private final ScrollContainer bar;
+	private static final String [] tabs = {"All", "Read", "Reading", "Not Read", "Abandoned"};
+	private final Container bottomBar;
 
-	private static class ButtonContainerAction {
-		final Button btn;
-		final Container container;
-		final Runnable action;
-		ButtonContainerAction(Button btn, Container container, Runnable action) {
-			this.btn = btn;
-			this.container = container;
-			this.action = action;
-		}
-	}
+	private ArrayList<ButtonContainerAction> btnContainerActionList = new ArrayList<>();
 
-	ArrayList<ButtonContainerAction> btnContainerActionList = new ArrayList<>();
+	private BooksListAll booksListAllContainer = new BooksListAll();
+	private BooksListRead booksListReadContainer = new BooksListRead();
+	private BooksListReading booksListReadingContainer = new BooksListReading();
+	private BooksListNotRead booksListNotReadContainer = new BooksListNotRead();
+	private BooksListAbandoned booksListAbandonedContainer = new BooksListAbandoned();
 
-	BooksListAll booksListAllContainer = new BooksListAll();
-	BooksListRead booksListReadContainer = new BooksListRead();
-	BooksListReading booksListReadingContainer = new BooksListReading();
-	BooksListNotRead booksListNotReadContainer = new BooksListNotRead();
-	BooksListAbandoned booksListAbandonedContainer = new BooksListAbandoned();
-
-	public Container getBar() {
-		return bar;
-	}
+	public static final int ALL = 0;
+	public static final int READ = 1;
+	public static final int READING = 2;
+	public static final int NOTREAD = 3;
+	public static final int ABANDONED = 4;
 
 	public BooksTabbedContainer() {
-		super(names);
+		super(tabs);
 		started = false;
-		setType(TABS_NONE);
+		setType(TABS_TOP);
 
-		addBottomContainer2List(new Button("ALL"), booksListAllContainer, booksListAllContainer::update);
-		addBottomContainer2List(new Button("READ"), booksListReadContainer, booksListReadContainer::update);
-		addBottomContainer2List(new Button("READING"), booksListReadingContainer, booksListReadingContainer::update);
-		addBottomContainer2List(new Button("NOT READ"), booksListNotReadContainer, booksListNotReadContainer::update);
-		addBottomContainer2List(new Button("ABANDONED"), booksListAbandonedContainer, booksListAbandonedContainer::update);
-	
-		this.bar = new ScrollContainer() {
+		addBottomContainer2List(createButton(ALL), booksListAllContainer, ()-> {});
+		addBottomContainer2List(createButton(READ), booksListReadContainer, ()-> {});
+		addBottomContainer2List(createButton(READING), booksListReadingContainer, ()-> {});
+		addBottomContainer2List(createButton(NOTREAD), booksListNotReadContainer, ()-> {});
+		addBottomContainer2List(createButton(ABANDONED), booksListAbandonedContainer, ()-> {});
+
+		this.bottomBar = new Container() {
 
 			@Override
 			public void initUI() {
 				super.initUI();
 
-				setBorderStyle(BORDER_SIMPLE);
-				setForeColor(0xdcdcdc);
+				setBorderStyle(BORDER_NONE);
+				setBackColor(Colors.PRIMARY);
 
 				boolean firstTime = true;
 				for (ButtonContainerAction btnContainerAction: btnContainerActionList) {
-					int xPos, yPos,  height;
+					int xPos, yPos, width, height;
 					if (firstTime) {
 						firstTime = false;
 						xPos = LEFT;
 						yPos = CENTER;
-						height = PARENTSIZE;
+						width = PARENTSIZE + 33;
+						height = PREFERRED;
 					} else {
 						xPos = AFTER;
 						yPos = SAME;
+						width = SAME;
 						height = SAME;
 					}
-					btnContainerAction.btn.setBorder(BORDER_NONE);
-					add(btnContainerAction.btn, xPos, yPos, PREFERRED + 100, height);
+					add(btnContainerAction.btn, xPos, yPos, width, height);
 				}
 			}
 		};
+	}
+
+	public Button createButton(int type) {
+		Button b;
+		if (type == ALL) {
+			b = new Button("ALL");
+		} else if (type == READ) {
+			b = new Button("READ");
+		} else if (type == READING) {
+			b = new Button("READING");
+		} else if (type == NOTREAD) {
+			b = new Button("NOTREAD");
+		} else if (type == ABANDONED) {
+			b = new Button("ABANDONED");
+		} else {
+			return null;
+		}
+		b.setFont(Font.getFont(true, fmH * 8 / 10));
+		b.setForeColor(Colors.P_LIGHT);		
+		b.setBorder(Button.BORDER_NONE);
+		return b;
+	}
+
+	public Container getBottomBar() {
+		return bottomBar;
 	}
 
 	private void addBottomContainer2List(Button btn, Container container, Runnable action) {
@@ -86,33 +109,9 @@ public class BooksTabbedContainer extends TabbedContainer {
 	}
 
 	@Override
-	public void setActiveTab(int tab, boolean animate) {
-		int lastActiveTab = getActiveTab();
-
-		if (tab != lastActiveTab) {
-			super.setActiveTab(tab, animate);
-
-			int idx = 0;
-			for (ButtonContainerAction btnContainer: btnContainerActionList) {
-				Button btn = btnContainer.btn;
-				if (idx != tab) {
-					btn.press(false);
-					btn.setForeColor(Color.BLACK);
-				} else {
-					btn.press(true);
-					btn.setForeColor(0x4A90E2);
-					btnContainer.action.run();
-				}
-				idx++;
-			}
-		}
-	}
-
-	@Override
 	public void initUI() {
 		super.initUI();
-		setBackColor(Color.WHITE);
-		
+
 		int idx = 0;
 		for (ButtonContainerAction btnContainer: btnContainerActionList) {
 			if (btnContainer.container != null) {
@@ -121,6 +120,17 @@ public class BooksTabbedContainer extends TabbedContainer {
 			idx++;
 		}
 		setActiveTab(0);
+	}
+
+	private static class ButtonContainerAction {
+		final Button btn;
+		final Container container;
+		final Runnable action;
+		ButtonContainerAction(Button btn, Container container, Runnable action) {
+			this.btn = btn;
+			this.container = container;
+			this.action = action;
+		}
 	}
 
 }

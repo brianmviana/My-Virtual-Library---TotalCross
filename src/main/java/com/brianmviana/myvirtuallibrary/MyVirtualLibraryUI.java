@@ -1,59 +1,82 @@
 package com.brianmviana.myvirtuallibrary;
 
-
-import com.brianmviana.myvirtuallibrary.ui.BooksListUI;
-
+import java.io.IOException;
+import com.brianmviana.myvirtuallibrary.ui.BooksTabbedContainer;
+import com.brianmviana.myvirtuallibrary.ui.Search;
+import com.brianmviana.myvirtuallibrary.util.Colors;
 import totalcross.sys.Settings;
 import totalcross.ui.Container;
+import totalcross.ui.ImageControl;
 import totalcross.ui.Label;
 import totalcross.ui.MainWindow;
 import totalcross.ui.SideMenuContainer;
 import totalcross.ui.font.Font;
 import totalcross.ui.gfx.Color;
-import totalcross.ui.icon.Icon;
 import totalcross.ui.icon.MaterialIcons;
+import totalcross.ui.image.Image;
+import totalcross.ui.image.ImageException;
 
 public class MyVirtualLibraryUI extends MainWindow{
-	
-	public MyVirtualLibraryUI(){
-		super("Books", NO_BORDER);
+	SideMenuContainer sideMenu;
 
-		setUIStyle(Settings.Android);
-		Settings.uiAdjustmentsBasedOnFontHeight = true;
-		setBackForeColors(Color.WHITE, Color.BLACK);
-	}
+	  public MyVirtualLibraryUI() {
 
-	public void initUI(){
+	    super("My Books", NO_BORDER);
 
-		SideMenuContainer.Item home = new SideMenuContainer.Item("My Books", MaterialIcons._BOOK, 0x4A90E2, ()-> {return new BooksListUI();});
-		//		SideMenuContainer.Item sample = new SideMenuContainer.Item("Sample", MaterialIcons._THUMB_UP, 0x4A90E2, ()-> {return new Login();});
-		//		
-		//		SideMenuContainer.Sub submenu = new SideMenuContainer.Sub("SubMenu", sample);
-		//		
-		SideMenuContainer sideMenu = new SideMenuContainer(null, home);//, submenu);
+	    setUIStyle(Settings.Android);
+	    Settings.uiAdjustmentsBasedOnFontHeight = true;
 
-		sideMenu.topMenu.header = new Container(){
-			public void initUI(){
-				setBackColor(0x4A90E2);
+	    setBackForeColors(Colors.BACKGROUND, Colors.FOREGROUND);
+	  }
 
-				Label title = new Label("My Library Vitual", CENTER, Color.WHITE, false);
-				title.setFont(Font.getFont("Lato Bold", false, this.getFont().size+2));
-				title.setForeColor(Color.WHITE);
-				add(title, LEFT+45, BOTTOM-45, PARENTSIZE+90, DP+60);
-			}
-		};
+	  @Override
+	  public void initUI() {
+//		SideMenuContainer.Item home = new SideMenuContainer.Item("Home", MaterialIcons._HOME, Color.BLACK, false, () -> { return new Home();});
+//		SideMenuContainer.Item login= new SideMenuContainer.Item("Login", MaterialIcons._PERSON, Color.BLACK,  () -> { return new Login(); });
+		SideMenuContainer.Item books = new SideMenuContainer.Item("My Books", MaterialIcons._LIBRARY_BOOKS, Color.BLACK,  ()-> {return new BooksTabbedContainer();});
+		SideMenuContainer.Item search = new SideMenuContainer.Item("Search", MaterialIcons._SEARCH, Color.BLACK,  ()-> {return new Search();});
+			
+//	    SideMenuContainer.Sub group =
+//	        new SideMenuContainer.Sub("Components", buttons, edits, checkRadio);
+		
+	    sideMenu =
+	        new SideMenuContainer(
+	            null,
+	            books,
+	            search);
 
-		sideMenu.setBarFont(Font.getFont(Font.getDefaultFontSize()));
-		sideMenu.setBackColor(0x4A90E2);
-		sideMenu.setForeColor(Color.WHITE);
-		sideMenu.setItemForeColor(Color.BLACK);
-		sideMenu.topMenu.drawSeparators = true;
-		sideMenu.topMenu.itemHeightFactor = 3;
+	    sideMenu.topMenu.header =
+	        new Container() {
+	          @Override
+	          public void initUI() {
 
+	            try {
+	              setBackColor(Colors.REDDESIGN);
 
-		Icon icon = new Icon(MaterialIcons._MENU);
-		icon.setBackColor(Color.WHITE);
-		add(icon, CENTER, TOP);
-		add(sideMenu, RIGHT, TOP, PARENTSIZE, PARENTSIZE);
-	}
+	              Label title = new Label("My Books", LEFT, Color.WHITE, false);
+	              title.setFont(Font.getFont("Lato Bold", false, this.getFont().size + 5));
+	              title.setForeColor(Color.WHITE);
+	              add(title, LEFT + 45, BOTTOM - 30, FILL, DP + 56);
+
+	              ImageControl profile = new ImageControl(new Image("images/books.png"));
+	              profile.scaleToFit = true;
+	              profile.transparentBackground = true;
+	              add(profile, LEFT + 45, TOP + 150, PREFERRED, FIT);
+
+	            } catch (IOException | ImageException e) {
+	              e.printStackTrace();
+	            }
+	          }
+	        };
+
+	    sideMenu.setBarFont(Font.getFont(Font.getDefaultFontSize() + 5));
+	    sideMenu.setBackColor(Colors.PRIMARY);
+	    sideMenu.setForeColor(Color.WHITE);
+	    sideMenu.setItemForeColor(Color.BLACK);
+	    sideMenu.topMenu.drawSeparators = false;
+	    sideMenu.topMenu.itemHeightFactor = 3;
+
+	    add(sideMenu, LEFT, TOP, PARENTSIZE, PARENTSIZE);
+	  }
+
 }
