@@ -3,7 +3,8 @@ package com.brianmviana.myvirtuallibrary;
 import java.io.IOException;
 import com.brianmviana.myvirtuallibrary.ui.BooksTabbedContainer;
 import com.brianmviana.myvirtuallibrary.ui.Search;
-import com.brianmviana.myvirtuallibrary.util.Colors;
+import com.brianmviana.myvirtuallibrary.utils.Colors;
+
 import totalcross.sys.Settings;
 import totalcross.ui.Container;
 import totalcross.ui.ImageControl;

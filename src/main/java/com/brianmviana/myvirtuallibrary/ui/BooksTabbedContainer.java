@@ -7,7 +7,7 @@ import com.brianmviana.myvirtuallibrary.ui.books.BooksListAll;
 import com.brianmviana.myvirtuallibrary.ui.books.BooksListNotRead;
 import com.brianmviana.myvirtuallibrary.ui.books.BooksListRead;
 import com.brianmviana.myvirtuallibrary.ui.books.BooksListReading;
-import com.brianmviana.myvirtuallibrary.util.Colors;
+import com.brianmviana.myvirtuallibrary.utils.Colors;
 
 import totalcross.ui.Button;
 import totalcross.ui.Container;

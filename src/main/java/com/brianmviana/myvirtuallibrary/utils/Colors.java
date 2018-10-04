@@ -1,10 +1,10 @@
-package com.brianmviana.myvirtuallibrary.util;
+package com.brianmviana.myvirtuallibrary.utils;
 
 import totalcross.ui.gfx.Color;
 
 public class Colors {
 	
-	public static final int PRIMARY = 0x4A90E2;//0x18b7fb;
+	public static final int PRIMARY = 0x4A90E2;
 	public static final int P_LIGHT = 0x6ee9ff;
 	public static final int P_DARK = 0x0087c8;
 	public static final int P_GREY = 0xCCCCCC;
@@ -21,5 +21,6 @@ public class Colors {
 	public static final int KHAKI = 0xF0E68C;
 	public static final int PURPLE = 0xce93d8;
 	public static final int GRAY = 0xDCDCDC;
+	
 	
 }
